@@ -6,7 +6,7 @@ import { Taxonomy } from './../models/taxonomy';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -36,15 +36,15 @@ export class ProductService {
    */
   getProduct(id: string): Observable<Product> {
     return this.http
-      .get(
+      .get<Product>(
         `http://localhost:3000/api/v1/products/${id}?${+new Date()}`
       )
-      .pipe(map(resp => deserialize(resp) as Product));
   }
 
   getProductReviews(products): Observable<any> {
     return this.http.get(`products/${products}/reviews`);
   }
+
   /**
    *
    *
@@ -52,9 +52,7 @@ export class ProductService {
    *
    * @memberof ProductService
    */
-  getTaxonomies(): any {
-    return this.http.get<Array<Taxonomy>>(`api/v1/taxonomies?set=nested`);
-  }
+  getTaxonomies(): any { return this.http.get<Array<Taxonomy>>(`api/v1/taxonomies?set=nested`); }
 
   /**
    *
@@ -66,14 +64,9 @@ export class ProductService {
   getProducts(pageNumber: number): Observable<Array<Product>> {
     // sort=A-Z&filter[name]=Hill's&page[limit]=2&page[offset]=2
     return this.http
-      .get(
+      .get<Array<Product>>(
         `http://localhost:3000/api/v1/products?q[s]=avg_rating+desc&page[limit]=20&page[offset]=${pageNumber}`
       )
-      .pipe(
-        map(
-          resp => deserialize(resp) as Array<Product>
-        )
-      );
   }
 
   markAsFavorite(id: number): Observable<{}> {
