@@ -154,3 +154,103 @@ We love some frameworks too:-
 ### We are avialible for hire
 
 __If you want to hire us for a project, please contact us on `hello@aviabird.com`.__
+
+
+  public abstract class BaseRepositoryTest
+    {
+        protected DbContextOptions<ApplicationDbContext> _contextOptions;
+        protected BaseRepositoryTest()
+        {
+            _contextOptions = DbContextShared.CreateContextOptions(this.GetType().Name);
+        }
+    }
+  
+   public static class DbContextShared
+    {
+      public static DbContextOptions<ApplicationDbContext> CreateContextOptions(string name)
+        {
+            var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            builder.UseInMemoryDatabase(name).UseInternalServiceProvider(serviceProvider);
+            return builder.Options;
+        }
+  }
+  
+   public class CompanyRepositoryTest: BaseRepositoryTest{
+    public CompanyRepositoryTest():base(){
+      using (var context = new ApplicationDbContext(_contextOptions, mockAccessor.Object))
+      {
+        companyId1 = Guid.NewGuid();
+        companyId2 = Guid.NewGuid();
+        deletedCompanyid = Guid.NewGuid();
+        
+         context.Companies.AddRange(
+                    new DbEntity
+                    {
+                        Id = companyId1,
+                        Name = "Company 1",
+                        Description = "Company 1",
+                        Css1 = "",
+                        CreatedDate = DateTime.Now
+                    },
+                    new DbEntity
+                    {
+                        Id = companyId2,
+                        Name = "Company 2",
+                        Description = "Company 2",
+                        Css1 = "",
+                        CreatedDate = DateTime.Now
+                    }
+                );
+                context.SaveChanges();
+      }
+    }
+    
+    
+        [Fact]
+        public void Should_save_new_company()
+        {
+            var newCompanyId = Guid.NewGuid();
+            var newCompany = CompanyFactory.Company(newCompanyId, "Company", "related info");
+
+            using (var context = new ApplicationDbContext(_contextOptions, mockAccessor.Object))
+            {
+                var repository = new CompanyRepository(context, SharedMapper.CreateNewMapper());
+                repository.Create(newCompany);
+            }
+
+            using (var context = new ApplicationDbContext(_contextOptions, mockAccessor.Object))
+            {
+                var repository = new CompanyRepository(context, SharedMapper.CreateNewMapper());
+                var language = repository.GetById(newCompanyId);
+
+                Assert.NotNull(language);
+            }
+        }
+        
+                [Fact]
+        public async void Should_return_async_items()
+        {
+            var mapper = SharedMapper.CreateNewMapper();
+            using (var context = new ApplicationDbContext(_contextOptions, mockAccessor.Object))
+            {
+                var repo = new TemplateRepository(context, mapper);
+                var item =await repo.GetAsyncList();
+                Assert.Equal(item.Count,2);
+            }
+        }
+   }
+   
+       public static class SharedMapper
+    {
+        public static IMapper CreateNewMapper()
+        {
+            var autoMapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new DomainAutoMapperProfile());
+                cfg.AddProfile(new ReportingAutoMapperProfile());
+            });
+
+            return autoMapperConfig.CreateMapper();
+        }
+    }
