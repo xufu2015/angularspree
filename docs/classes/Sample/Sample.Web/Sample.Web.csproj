@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sample.Data\Sample.Data.csproj" />
+    <ProjectReference Include="..\Sample.Migrations\Sample.Migrations.csproj" />
+    <ProjectReference Include="..\Sample.Models\Sample.Models.csproj" />
+  </ItemGroup>
+
+</Project>
