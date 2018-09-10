@@ -155,10 +155,30 @@ We love some frameworks too:-
 
 __If you want to hire us for a project, please contact us on `hello@aviabird.com`.__
 
-https://github.com/ajsaulsberry/BlipAjax
-CreateEmailAddressPartial.cshtml
+        private void AddOrDeleteCategories(ProductForm model, Product product)
+        {
+            foreach (var categoryId in model.Product.CategoryIds)
+            {
+                if (product.Categories.Any(x => x.CategoryId == categoryId))
+                {
+                    continue;
+                }
 
- var form = $('#CreateEmailAddress').removeData("validator") .removeData("unobtrusiveValidation");
-$.validator.unobtrusive.parse(form);
+                var productCategory = new ProductCategory
+                {
+                    CategoryId = categoryId
+                };
+                product.AddCategory(productCategory);
+            }
 
-@using (Html.BeginForm("CreateEmailAddressPartial", "Customer", FormMethod.Post, new { id = "CreateEmailAddress" }))
+            var deletedProductCategories =
+                product.Categories.Where(productCategory => !model.Product.CategoryIds.Contains(productCategory.CategoryId))
+                    .ToList();
+
+            foreach (var deletedProductCategory in deletedProductCategories)
+            {
+                deletedProductCategory.Product = null;
+                product.Categories.Remove(deletedProductCategory);
+                _productCategoryRepository.Remove(deletedProductCategory);
+            }
+        }
