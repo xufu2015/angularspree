@@ -53,132 +53,16 @@ If you are looking to build a project similar to this one with all the ready-mad
 
 🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-## What's included?
+            //check TenancyReference
+            // () => get from ibsService or cloudVoid if TenancyReference cannot be found
 
-Currently, this is a fairly basic vesion of the application. We are calling it a pre-alpha release.
+            // if tenancyReference cannot found
+                // check IsCurrentTenant by call function
+                    // if found ()=> call transferibs
+                    // else ()=> call signupibs
+                             // get tenants from crm ()=>
+                            // createnewtanant()=> createnewtenant()=>
+                // if the result from above deletedlist has data , record error
+                // if the result not create tenancyRef or not valid tenancyRef, call error
 
-### What's working and ready to be deployed?
-
-* Add/Remove products to cart.
-* Select/Clear filters based on category.
-* Support for product variants.
-* Cart checkout feature.
-* Cash on delivery option.
-* Authentication (Login/Signup)
-* More sorting features(Relevance, Newest, Price[low,high], Name[A-Z/Z-A])
-* google login support.
-* Add to favourite products.
-* New landing page
-* Search page and feature
-* Product image zoomer
-* Product Review and Rating feature
-
-### What's coming very soon?
-
-* __Angular Universal__ support for better SEO and [much more](https://github.com/angular/angular/issues/13822).
-* __Payment__ options credit/debit cards.
-* __Multilanguage__ Support i18n.
-* Support for further types of products(size, pattern, collar, etc).
-* Support for further options in types eg. size(32, 34, 36) etc. etc.
-* Ability to add more than one addresses.
-* and many more....
-
-There is a long way to go... keep an eye on this [project](https://github.com/aviabird/angularspree/) here on github.
-
-## Angular 6 Fundamentals course
-
-Based on this application and **[other applications](https://github.com/aviabird/yatrum)** we have built in past we are working on a full blown Angular 6 fundamentals course on udemy. Throughout this course you'll learn how to build yatrum from ground up.
-
-### Course curriculum
-
-* Architecture, setup, source files
-* TypeScript basics
-* Getting started with latest angular
-* Template fundamentals
-* Rendering flows
-* Component Architecture and Modules
-* Services, Http and Observables
-* Template Forms, Inputs and Validation
-* Reactive Forms and more magic
-* Routing
-
-__[Subscribe to this course here](https://upscri.be/a00eaf/)__
-
-## What in the Tech News?
-
-We've built AngularSpree keeping scaling in mind leveraging the best technologies out there.
-
-As of now, the application has 7 major modules, `products`, `core`, `search`, `user`, `checkout`, `auth`, `shared`.
-
-We are working on documentation and we can share that once we are looking at a more stable release.
-
-* Exclusively using @ngrx libraries(store, effects, actions), showcasing common patterns and best practices.
-* Fully Observable approach using RxJS 6.
-* Uses @ngrx/store to manage the state of the app and to cache requests made to the Backend API, 
-* @angular/router to manage navigation between routes, 
-* @ngrx/effects to isolate side effects.
-* @ngrx/actions to define the actions on the frontend.
-* Following Container/Presentation component approach.
-* Lazy loading of modules(for modules which are not immediately required for first painting the DOM).
-* ImmutableJs to create and safeguard objects againts mutability.
-* Project is divided into modules which are more or less independant of each other except core module.
-
-__Current version of Angular is latest release [6.0.3](https://github.com/angular/angular/releases/tag/6.0.3).__
-
-__Current version of Angular-cli is [6.0.3](https://github.com/angular/angular-cli/releases/tag/v6.0.3).__
-
-We try to make sure that we keep the repository upto date with the angular release every weekend.
-
-## DEMO
-Video coming soon
-
-## Who are we?
-
-We are [Aviabird Technologies](https://aviabird.com).
-
-__We love to create awesome Web & Mobile products.__
-
-__We are very proud of our work.__
-
-We love technologies like Golang, Elixir, Scala, Ruby, Javascript, Typescript, Swift, Java.
-
-We love some frameworks too:-
-
-* Ruby On Rails
-* Phoenix/Elixir framework.
-* Spring framework.
-* AngularJs (1.x+ & 2.x+)
-* ReactJs
-* BackboneJs
-
-### We are avialible for hire
-
-__If you want to hire us for a project, please contact us on `hello@aviabird.com`.__
-
-        private void AddOrDeleteCategories(ProductForm model, Product product)
-        {
-            foreach (var categoryId in model.Product.CategoryIds)
-            {
-                if (product.Categories.Any(x => x.CategoryId == categoryId))
-                {
-                    continue;
-                }
-
-                var productCategory = new ProductCategory
-                {
-                    CategoryId = categoryId
-                };
-                product.AddCategory(productCategory);
-            }
-
-            var deletedProductCategories =
-                product.Categories.Where(productCategory => !model.Product.CategoryIds.Contains(productCategory.CategoryId))
-                    .ToList();
-
-            foreach (var deletedProductCategory in deletedProductCategories)
-            {
-                deletedProductCategory.Product = null;
-                product.Categories.Remove(deletedProductCategory);
-                _productCategoryRepository.Remove(deletedProductCategory);
-            }
-        }
+            //if result correct, call function to save the signup reseult
